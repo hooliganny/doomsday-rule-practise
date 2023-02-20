@@ -1,12 +1,22 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 
 function App() {
-  const [guess, setGuess] = useState();
+  function randomDate(start: Date, end: Date) {
+    return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+  }
+  function newDate() {
+    setAnswer(randomDate(new Date('1700-01-01T12:00:00'), new Date('2299-12-31T12:00:00')));
+  }
+  
+  const [guess, setGuess] = useState(0);
   const [count, setCount] = useState(0);
-  const answer = 0;
+  const [answer, setAnswer] = useState(new Date());
+  useEffect(()=> {
+    newDate();
+  }, [count]);
+  console.log(answer.getFullYear());
   const handleChange = (event: any) => {
-    console.log(guess);
     setGuess(event.target.value);
   };
 
@@ -19,9 +29,15 @@ function App() {
       </div>
       <button
         onClick={() => {
-          if (guess == answer) {
+          // change logic here, should be guessing more than just the year
+          if (guess == answer.getFullYear()) {
             setCount((count) => count + 1);
+            setGuess(0);
+            // console.log(answer)
+            // setAnswer(answer+1);
+            // Change the param to randomise
           }
+          
         }}
       >
         Guess!
