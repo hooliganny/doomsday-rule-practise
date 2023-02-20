@@ -8,14 +8,22 @@ function App() {
   function newDate() {
     setAnswer(randomDate(new Date('1700-01-01T12:00:00'), new Date('2299-12-31T12:00:00')));
   }
-  
-  const [guess, setGuess] = useState(0);
+  enum Days {
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturay",
+  }
+  const [guess, setGuess] = useState('');
   const [count, setCount] = useState(0);
   const [answer, setAnswer] = useState(new Date());
   useEffect(()=> {
     newDate();
   }, [count]);
-  console.log(answer.getFullYear());
+  console.log(answer.getDay());
   const handleChange = (event: any) => {
     setGuess(event.target.value);
   };
@@ -29,15 +37,10 @@ function App() {
       </div>
       <button
         onClick={() => {
-          // change logic here, should be guessing more than just the year
-          if (guess == answer.getFullYear()) {
+          if (((guess as unknown as number) == answer.getDay()) || (guess == Days[answer.getDay()])) {
             setCount((count) => count + 1);
-            setGuess(0);
-            // console.log(answer)
-            // setAnswer(answer+1);
-            // Change the param to randomise
+            setGuess('');
           }
-          
         }}
       >
         Guess!
