@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./App.css";
 
 function App() {
@@ -22,25 +22,28 @@ function App() {
     "Wednesday",
     "Thursday",
     "Friday",
-    "Saturay",
+    "Saturday",
   ];
+  const refs = {
+    guessRef: useRef(""),
+  };
   const [guess, setGuess] = useState("");
   const [count, setCount] = useState(0);
   const [answer, setAnswer] = useState(new Date());
   /*   useEffect(() => {
     newDate();
   }, [count]); */
-  console.log(answer, answer.getDay());
   const handleChange = (event: any) => {
     setGuess(event.target.value);
   };
   const handleKeyDown = (event: any) => {
-    console.log(event.key);
     if (event.key === "Enter") {
       validateGuess();
     }
   };
   const validateGuess = () => {
+    console.log(guess);
+    // Guess is not updating fast enough, hence the need to double press, has something to do with async nature of react i think, research this
     if (
       (guess as unknown as number) == answer.getDay() ||
       guess == Days[answer.getDay()]
@@ -72,12 +75,28 @@ function App() {
     <div className="App">
       <h1>Doomsday Rule Practise</h1>
       <div className="card">
+        <h2>
+          {answer.toLocaleDateString()} <br />
+        </h2>
+        <p>
+          <i>
+            Month/Day/Year
+            {/* {Intl.DateTimeFormat(answer).prototype.resolvedOptions().dateStyle}  Was trying to make it so that it would show the timezone of the system they are using */}
+          </i>
+        </p>
+        <h2>
+          This will be removed later, answer: {answer.getDay()} or{" "}
+          {Days[answer.getDay()]}
+        </h2>
+
         <p>~Advice Advice~</p>
         <div className="button-wrapper">{renderButtons}</div>
-        <textarea
+        <input
+          type="text"
           value={guess}
           onChange={handleChange}
           onKeyDown={handleKeyDown}
+          ref={refs.guessRef}
         />
       </div>
       <button onClick={validateGuess}>Guess!</button>
