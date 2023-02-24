@@ -24,53 +24,64 @@ function App() {
     "Friday",
     "Saturday",
   ];
-  const refs = {
-    guessRef: useRef(""),
-  };
+  // const refs = {
+  //   guessRef: useRef(""),
+  // };
   const [guess, setGuess] = useState("");
-  const [count, setCount] = useState(0);
+  const [rightCount, setRightCount] = useState(0);
+  // const [wrongCount, setWrongCount] = useState(0); Do I want to count this?? - How does it affect the validation in the useEffect?
   const [answer, setAnswer] = useState(new Date());
-  /*   useEffect(() => {
-    newDate();
-  }, [count]); */
-  const handleChange = (event: any) => {
+  function handleChange(event: any) {
     setGuess(event.target.value);
-  };
-  const handleKeyDown = (event: any) => {
+  }
+  // No longer necessary since validateGuess() is gone
+  /* function handleKeyDown(event: any) {
     if (event.key === "Enter") {
-      validateGuess();
+      // validateGuess();
     }
-  };
-  const validateGuess = () => {
+  } */
+  function buttonPress(day: string) {
+    setGuess(day);
+    // validateGuess();
+  }
+  /* function validateGuess() {
     console.log(guess);
     // Guess is not updating fast enough, hence the need to double press, has something to do with async nature of react i think, research this
     if (
       (guess as unknown as number) == answer.getDay() ||
       guess == Days[answer.getDay()]
     ) {
-      setCount((count) => count + 1);
+      setRightCount((rightCount) => rightCount + 1);
       setGuess("");
       newDate();
     }
-  };
-  const revealHelp = () => {
+  } */
+
+  useEffect(() => {
+    // Might be inefficient to be updating every time something changes, but it fixes the problem from validateGuess()
+    if (
+      (guess as unknown as number) == answer.getDay() ||
+      guess == Days[answer.getDay()]
+    ) {
+      setRightCount((rightCount) => rightCount + 1);
+      setGuess("");
+      newDate();
+    }
+  }, [guess]);
+
+  function revealHelp() {
     // maybe toggle display? is there a modular way to do this?
     alert("No implementation yet, sorry");
-  };
+  }
   const renderButtons = Days.map((day) => {
     return (
       // Need to press twice for some reason, look into this
-      <button
-        key={day}
-        onClick={() => {
-          setGuess(day);
-          validateGuess();
-        }}
-      >
+      <button key={day} onClick={() => buttonPress(day)}>
         {day}
       </button>
     );
   });
+
   return (
     <div className="App">
       <h1>Doomsday Rule Practise</h1>
@@ -89,19 +100,20 @@ function App() {
           {Days[answer.getDay()]}
         </h2>
 
-        <p>~Advice Advice~</p>
+        <p>Find the day of the week of this date!</p>
         <div className="button-wrapper">{renderButtons}</div>
         <input
           type="text"
           value={guess}
           onChange={handleChange}
-          onKeyDown={handleKeyDown}
-          ref={refs.guessRef}
+          // onKeyDown={handleKeyDown}
+          // ref={refs.guessRef}
         />
       </div>
-      <button onClick={validateGuess}>Guess!</button>
-      <button onClick={revealHelp}>Help!</button>
-      <p className="correct">Number of guesses correct: {count}</p>
+      <button>Guess!</button>
+      <button onClick={revealHelp}>Tutorial</button>
+
+      <p className="correct">Number of guesses correct: {rightCount}</p>
     </div>
   );
 }
