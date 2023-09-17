@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import Modal from "./Modal";
 import "./App.css";
 
 const Days = [
@@ -9,6 +10,7 @@ const Days = [
   "Thursday",
   "Friday",
   "Saturday",
+  "Give up",
 ];
 
 const MAX_NUMBER_OF_GUESSES = 3;
@@ -28,6 +30,7 @@ function App() {
   const [wrongCount, setWrongCount] = useState(MAX_NUMBER_OF_GUESSES);
   const [answer, setAnswer] = useState(new Date());
   const keyboardInputRef = useRef<HTMLInputElement | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   function newDate() {
     setAnswer(randomDate(EARLIEST_DAY, LATEST_DAY));
@@ -46,7 +49,8 @@ function App() {
   useEffect(() => {
     if (
       guess !== "" &&
-      (Number(guess) === answer.getDay() || guess == Days[answer.getDay()])
+      (Number(guess) === answer.getDay() ||
+        guess.toLowerCase() == Days[answer.getDay()].toLowerCase())
     ) {
       setRightCount((rightCount) => rightCount + 1);
       setGuess("");
@@ -55,10 +59,35 @@ function App() {
         keyboardInputRef.current !== undefined &&
         keyboardInputRef.current !== null
       ) {
-        keyboardInputRef.current.value = ""; // Clear the input box
+        keyboardInputRef.current.value = "";
       }
+    } else if (guess === "Give up") {
+      setGuess("");
+      newDate();
     }
   }, [guess]);
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  useEffect(() => {
+    const handleEscape = (e: any) => {
+      if (e.key === "Escape") {
+        closeModal();
+      }
+    };
+
+    window.addEventListener("keydown", handleEscape);
+
+    return () => {
+      window.removeEventListener("keydown", handleEscape);
+    };
+  }, []);
 
   function revealHelp() {
     alert("No implementation yet, sorry");
@@ -71,8 +100,13 @@ function App() {
           return (
             <button
               className="day-button"
+              style={
+                day === "Give up"
+                  ? { background: "gray", color: "white" }
+                  : undefined
+              }
               key={day}
-              onClick={buttonPress(day)} // Pass the day directly
+              onClick={buttonPress(day)}
             >
               {day}
             </button>
@@ -87,15 +121,13 @@ function App() {
     <div className="App">
       <h1>Doomsday Rule Practise</h1>
       <div className="card">
-        <h2>
-          {answer.toLocaleDateString()} <br />
-        </h2>
+        <h2>{answer.toLocaleDateString()}</h2>
         <p>
           <i>Month/Day/Year</i>
         </p>
         <h2>
-          This will be removed later, answer: {answer.getDay()}/
-          {Days[answer.getDay()]}
+          This will be removed later,
+          <br /> answer: {answer.getDay()}/{Days[answer.getDay()]}
         </h2>
 
         <h2>Find the day of the week of this date!</h2>
@@ -111,8 +143,9 @@ function App() {
       </div>
       <div className="extra-buttons">
         <button onClick={revealHelp}>Step-by-Step Tutorial</button>
-        <button onClick={revealHelp}>What is this?</button>
+        <button onClick={openModal}>What is this?</button>
       </div>
+      <Modal isOpen={isModalOpen} onClose={closeModal} />
     </div>
   );
 }
