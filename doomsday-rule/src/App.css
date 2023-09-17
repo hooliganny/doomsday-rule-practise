@@ -5,3 +5,9 @@
   grid-column-gap: 10px;
   grid-row-gap: 10px;
 }
+
+.App {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
