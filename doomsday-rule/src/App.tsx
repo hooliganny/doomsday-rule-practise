@@ -10,7 +10,6 @@ const Days = [
   "Thursday",
   "Friday",
   "Saturday",
-  "Give up",
 ];
 
 const MAX_NUMBER_OF_GUESSES = 3;
@@ -61,7 +60,7 @@ function App() {
       ) {
         keyboardInputRef.current.value = "";
       }
-    } else if (guess === "Give up") {
+    } else if (guess === "Skip") {
       setGuess("");
       newDate();
     }
@@ -96,12 +95,12 @@ function App() {
   const DayButtons = useMemo(
     () => (
       <div className="button-wrapper">
-        {Days.map((day) => {
+        {Days.concat("Skip").map((day) => {
           return (
             <button
               className="day-button"
               style={
-                day === "Give up"
+                day === "Skip"
                   ? { background: "gray", color: "white" }
                   : undefined
               }
@@ -145,7 +144,7 @@ function App() {
         <button onClick={revealHelp}>Step-by-Step Tutorial</button>
         <button onClick={openModal}>What is this?</button>
       </div>
-      <Modal isOpen={isModalOpen} onClose={closeModal} />
+      <Modal isOpen={isModalOpen} onClose={closeModal} days={Days} />
     </div>
   );
 }

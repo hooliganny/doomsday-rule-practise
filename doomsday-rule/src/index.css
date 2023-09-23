@@ -68,6 +68,11 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+ul {
+  list-style: none;
+  padding: 0;
+}
+
 .card {
   display: flex;
   flex-direction: column;
@@ -139,6 +144,9 @@ button:focus-visible {
 
 /* Modal Content */
 .modal-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
   padding: 20px;
 }
 
