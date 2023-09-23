@@ -23,6 +23,7 @@ function Modal({
         </button>
         <div className="modal-content">
           <h2>The Doomsday Rule</h2>
+
           <section>
             The Doomsday Rule is a way of calculating what day a given date is
             in the standard Gregorian Calendar.
@@ -43,6 +44,7 @@ function Modal({
               );
             })}
           </section>
+
           <section>
             First, we need to determine the "anchor" day of the century of the
             date in question. <br />
@@ -55,6 +57,7 @@ function Modal({
             often ask for days in this century so it is important to remember,
             one way to remember is to think "we"-ndesday
           </section>
+
           <section>
             Following that, we can begin the calculations. <br />
             First we calculate how many 12s fit into the amount of years after
@@ -63,6 +66,7 @@ function Modal({
             42/12 = 3.5 <br />
             Which means <b>3</b> 12s fit into 42.
           </section>
+
           <section>
             Next we calculate the remainder from the above step. <br />
             12*3=36
@@ -70,12 +74,14 @@ function Modal({
             42-36=<b>6</b>
             <br />
           </section>
+
           <section>
             We then calculate how many 4s fit into the previous answer.
             <br />
             6/4=1.5 <br />
             Which means <b>1</b> 4s fit into 6. <br />
           </section>
+
           <section>
             Next we add up all the previous answers and take the answer modulo
             7. That is our day (use the chart above). <br />
@@ -86,6 +92,7 @@ function Modal({
             7%7=<b>6</b> <br />6 corresponds to a Saturday. This is the Doomsday
             for 1942.
           </section>
+
           <section>
             Now we must use the fact the certain days of the year always occur
             on the same day, the year's doomsday. <br />
@@ -106,6 +113,7 @@ function Modal({
             You will notice there is a lot of similarity between all these
             dates, so they won't be too hard to memorise.
           </section>
+
           <section>
             Now we finally get to find the day of our date in question. <br />
             We can calculate the difference between our date and the date from
@@ -117,6 +125,7 @@ function Modal({
             (6+6)%7=<b>5</b> <br />
             <br />5 is a Friday. Therefore, our date, 25/12/1942 is a Friday.
           </section>
+
           <section>
             Credit:{" "}
             <a href="https://www.timeanddate.com/date/doomsday-weekday.html">

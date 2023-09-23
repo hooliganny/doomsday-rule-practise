@@ -83,6 +83,16 @@ ul {
   /* background-color: white; */
 }
 
+.correct {
+  color: green;
+  font-weight: 700;
+}
+
+.incorrect {
+  color: violet;
+  font-weight: 700;
+}
+
 .answer-section {
   display: flex;
   align-self: center;

@@ -52,8 +52,7 @@ function App() {
         guess.toLowerCase() == Days[answer.getDay()].toLowerCase())
     ) {
       setRightCount((rightCount) => rightCount + 1);
-      setGuess("");
-      newDate();
+      reset();
       if (
         keyboardInputRef.current !== undefined &&
         keyboardInputRef.current !== null
@@ -61,10 +60,30 @@ function App() {
         keyboardInputRef.current.value = "";
       }
     } else if (guess === "Skip") {
-      setGuess("");
-      newDate();
+      reset();
+    } else if (
+      guess != "" &&
+      !(
+        Number(guess) === answer.getDay() ||
+        guess.toLowerCase() == Days[answer.getDay()].toLowerCase()
+      )
+    ) {
+      setWrongCount((count) => count - 1);
     }
   }, [guess]);
+
+  const reset = useCallback(() => {
+    setWrongCount(MAX_NUMBER_OF_GUESSES);
+    setGuess("");
+    newDate();
+  }, [wrongCount, MAX_NUMBER_OF_GUESSES]);
+
+  useEffect(() => {
+    if (wrongCount === 0) {
+      alert("You have run out of tries, try a new date.");
+      reset();
+    }
+  }, [wrongCount]);
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -75,7 +94,7 @@ function App() {
   };
 
   useEffect(() => {
-    const handleEscape = (e: any) => {
+    const handleEscape = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         closeModal();
       }
@@ -139,6 +158,7 @@ function App() {
         </div>
 
         <p className="correct">Number of guesses correct: {rightCount}</p>
+        <p className="incorrect">Number of guesses left: {wrongCount}</p>
       </div>
       <div className="extra-buttons">
         <button onClick={revealHelp}>Step-by-Step Tutorial</button>
