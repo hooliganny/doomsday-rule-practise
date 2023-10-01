@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Modal from "./Modal";
 import "./App.css";
+import StepByStepGuess from "./StepByStepGuess";
 
-const Days = [
+export const Days = [
   "Sunday",
   "Monday",
   "Tuesday",
@@ -30,6 +31,8 @@ function App() {
   const [answer, setAnswer] = useState(new Date());
   const keyboardInputRef = useRef<HTMLInputElement | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [showAnswer, setShowAnswer] = useState(false);
+  const [showStepByStep, setShowStepByStep] = useState(false);
 
   function newDate() {
     setAnswer(randomDate(EARLIEST_DAY, LATEST_DAY));
@@ -61,6 +64,8 @@ function App() {
       }
     } else if (guess === "Skip") {
       reset();
+    } else if (guess === "ans") {
+      setShowAnswer(true);
     } else if (
       guess != "" &&
       !(
@@ -76,6 +81,7 @@ function App() {
     setWrongCount(MAX_NUMBER_OF_GUESSES);
     setGuess("");
     newDate();
+    setShowAnswer(false);
   }, [wrongCount, MAX_NUMBER_OF_GUESSES]);
 
   useEffect(() => {
@@ -107,9 +113,9 @@ function App() {
     };
   }, []);
 
-  function revealHelp() {
-    alert("No implementation yet, sorry");
-  }
+  const toggleStepByStep = () => {
+    setShowStepByStep((value) => !value);
+  };
 
   const DayButtons = useMemo(
     () => (
@@ -139,17 +145,22 @@ function App() {
     <div className="App">
       <h1>Doomsday Rule Practise</h1>
       <div className="card">
+        <h2>Find the day of the week of this date!</h2>
+
         <h2>{answer.toLocaleDateString()}</h2>
         <p>
           <i>Month/Day/Year</i>
         </p>
-        <h2>
-          This will be removed later,
-          <br /> answer: {answer.getDay()}/{Days[answer.getDay()]}
-        </h2>
 
-        <h2>Find the day of the week of this date!</h2>
+        <hr style={{ width: "100%" }} />
+        {showAnswer && (
+          <h2>
+            This will be removed later,
+            <br /> answer: {answer.getDay()}/{Days[answer.getDay()]}
+          </h2>
+        )}
 
+        {showStepByStep && <StepByStepGuess answer={answer} />}
         {DayButtons}
 
         <div className="answer-section">
@@ -161,7 +172,7 @@ function App() {
         <p className="incorrect">Number of guesses left: {wrongCount}</p>
       </div>
       <div className="extra-buttons">
-        <button onClick={revealHelp}>Step-by-Step Tutorial</button>
+        <button onClick={toggleStepByStep}>Step-by-Step Tutorial</button>
         <button onClick={openModal}>What is this?</button>
       </div>
       <Modal isOpen={isModalOpen} onClose={closeModal} days={Days} />

@@ -38,7 +38,7 @@ function Modal({
             <br />
             {days.map((day, index) => {
               return (
-                <span>
+                <span key={index}>
                   {day} = {index} <br />
                 </span>
               );

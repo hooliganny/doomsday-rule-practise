@@ -79,10 +79,6 @@ ul {
   gap: 1rem;
 }
 
-.day-button {
-  /* background-color: white; */
-}
-
 .correct {
   color: green;
   font-weight: 700;
