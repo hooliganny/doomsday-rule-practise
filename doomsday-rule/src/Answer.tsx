@@ -1,8 +1,8 @@
 import React, { useRef } from "react";
 
 type AnswerProps = {
-  possibleAnswers: string[];
-  answer: string;
+  possibleAnswers: (string | number)[];
+  answer: string | number;
   ifCorrect: () => void;
   ifIncorrect: () => void;
 };
