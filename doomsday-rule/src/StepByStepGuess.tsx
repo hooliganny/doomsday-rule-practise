@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import Answer from "./Answer";
 import getAnchorDay from "./lib/getAnchorDay";
 import { Days } from "./App";
@@ -34,70 +34,52 @@ const StepByStepGuess = ({ answer }: { answer: Date }) => {
     };
   }, [answer]);
 
-  // console.log({
-  //   anchorDayAnswer,
-  //   howManyTwelvesAnswer,
-  //   howManyTwelvesRemainderAnswer,
-  //   howManyFoursIntoRemainderAnswer,
-  //   sumModuloSevenAnswer,
-  // });
-
-  const [anchorDayComplete, setAnchorDayComplete] = useState(false);
-  const [howManyTwelvesComplete, setHowManyTwelvesComplete] = useState(false);
-  const [howManyTwelvesRemainderComplete, setHowManyTwelvesRemainderComplete] =
-    useState(false);
-  const [
-    howManyFoursIntoRemainderComplete,
-    setHowManyFoursIntoRemainderComplete,
-  ] = useState(false);
-  const [sumModuloSevenComplete, setSumModuloSevenComplete] = useState(false);
+  const [step, setStep] = useState(0);
+  const steps = useMemo(
+    () => [
+      {
+        answer: Days[anchorDayAnswer],
+        possibleAnswers: anchorDays,
+      },
+      {
+        answer: howManyTwelvesAnswer,
+        possibleAnswers: [0, 1, 2, 3, 4, 5, 6, 7, 8],
+      },
+      {
+        answer: howManyTwelvesRemainderAnswer,
+        possibleAnswers: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+      },
+      {
+        answer: howManyFoursIntoRemainderAnswer,
+        possibleAnswers: [0, 1, 2, 3],
+      },
+      {
+        answer: sumModuloSevenAnswer,
+        possibleAnswers: [0, 1, 2, 3, 4, 5, 6],
+      },
+    ],
+    [Days, answer]
+  );
+  const handleCorrectAnswer = useCallback(() => {
+    if (step < steps.length - 1) {
+      setStep(step + 1);
+    } else {
+      console.log("All steps completed");
+    }
+  }, [step]);
 
   return (
     <>
-      <Answer
-        answer={Days[anchorDayAnswer]}
-        possibleAnswers={anchorDays}
-        ifCorrect={() => setAnchorDayComplete(true)}
-        ifIncorrect={() => alert("Incorrect")}
-        key={"Anchor day"}
-      />
-      {anchorDayComplete && (
+      {steps.slice(0, step + 1).map((stepData, index) => (
         <Answer
-          answer={howManyTwelvesAnswer}
-          possibleAnswers={[0, 1, 2, 3, 4, 5, 6, 7, 8]}
-          ifCorrect={() => setHowManyTwelvesComplete(true)}
+          key={`Step ${index}`}
+          answer={stepData.answer}
+          possibleAnswers={stepData.possibleAnswers}
+          ifCorrect={handleCorrectAnswer}
           ifIncorrect={() => console.log("incorrect")}
-          key={"How many twelves"}
         />
-      )}
-      {howManyTwelvesComplete && (
-        <Answer
-          answer={howManyTwelvesRemainderAnswer}
-          possibleAnswers={[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]}
-          ifCorrect={() => setHowManyTwelvesRemainderComplete(true)}
-          ifIncorrect={() => console.log("incorrect")}
-          key={"How many twelves remainder"}
-        />
-      )}
-      {howManyTwelvesRemainderComplete && (
-        <Answer
-          answer={howManyFoursIntoRemainderAnswer}
-          possibleAnswers={[0, 1, 2, 3]}
-          ifCorrect={() => setHowManyFoursIntoRemainderComplete(true)}
-          ifIncorrect={() => console.log("incorrect")}
-          key={"How many fours into remainder"}
-        />
-      )}
-      {howManyFoursIntoRemainderComplete && (
-        <Answer
-          answer={sumModuloSevenAnswer}
-          possibleAnswers={[0, 1, 2, 3, 4, 5, 6]}
-          ifCorrect={() => setSumModuloSevenComplete(true)}
-          ifIncorrect={() => console.log("incorrect")}
-          key={"Sum modulo seven"}
-        />
-      )}
-      {sumModuloSevenComplete && <p>Great! Now calculate the date!</p>}
+      ))}
+      {step === steps.length && <p>Great! Now calculate the date!</p>}
     </>
   );
 };
