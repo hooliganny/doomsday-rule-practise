@@ -82,6 +82,7 @@ function App() {
     setGuess("");
     newDate();
     setShowAnswer(false);
+    setShowStepByStep(false);
   }, [wrongCount, MAX_NUMBER_OF_GUESSES]);
 
   useEffect(() => {
