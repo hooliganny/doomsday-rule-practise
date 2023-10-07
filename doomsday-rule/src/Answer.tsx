@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { Fragment, useRef } from "react";
 import { Days } from "./App";
 
 type AnswerProps = {
@@ -52,7 +52,7 @@ const Answer = ({
       <div className="button-wrapper">
         {possibleAnswers.map((day, index) => {
           return (
-            <React.Fragment key={`${title}-${day}-${index}`}>
+            <Fragment key={`${title}-${day}-${index}`}>
               <button
                 className="day-button"
                 style={
@@ -64,7 +64,7 @@ const Answer = ({
               >
                 {day}
               </button>
-            </React.Fragment>
+            </Fragment>
           );
         })}
       </div>

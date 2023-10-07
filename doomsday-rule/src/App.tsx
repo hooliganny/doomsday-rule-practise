@@ -3,6 +3,7 @@ import Modal from "./Modal";
 import "./App.css";
 import StepByStepGuess from "./StepByStepGuess";
 import Answer from "./Answer";
+import useGameLogic from "./lib/useGameLogic";
 
 export const Days = [
   "Sunday",
@@ -14,95 +15,21 @@ export const Days = [
   "Saturday",
 ];
 
-const MAX_NUMBER_OF_GUESSES = 3;
-
-const EARLIEST_DAY = new Date("1700-01-01T12:00:00");
-const LATEST_DAY = new Date("2299-12-31T12:00:00");
-
-function randomDate(start: Date, end: Date) {
-  return new Date(
-    start.getTime() + Math.random() * (end.getTime() - start.getTime())
-  );
-}
-
 function App() {
-  const [rightCount, setRightCount] = useState(0);
-  const [wrongCount, setWrongCount] = useState(MAX_NUMBER_OF_GUESSES);
-  const [answer, setAnswer] = useState(new Date());
-  const keyboardInputRef = useRef<HTMLInputElement | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [showAnswer, setShowAnswer] = useState(false);
-  const [showStepByStep, setShowStepByStep] = useState(false);
-
-  function newDate() {
-    setAnswer(randomDate(EARLIEST_DAY, LATEST_DAY));
-  }
-
-  const reset = useCallback(() => {
-    setWrongCount(MAX_NUMBER_OF_GUESSES);
-    newDate();
-    setShowAnswer(false);
-    setShowStepByStep(false);
-  }, [wrongCount, MAX_NUMBER_OF_GUESSES]);
-
-  useEffect(() => {
-    if (wrongCount === 0) {
-      alert("You have run out of tries, try a new date.");
-      reset();
-    }
-  }, [wrongCount]);
-
-  const openModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
-
-  useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        closeModal();
-      }
-    };
-
-    window.addEventListener("keydown", handleEscape);
-
-    return () => {
-      window.removeEventListener("keydown", handleEscape);
-    };
-  }, []);
-
-  const toggleStepByStep = () => {
-    setShowStepByStep((value) => !value);
-  };
-
-  const ifCorrect = () => {
-    setRightCount((rightCount) => rightCount + 1);
-    reset();
-    if (
-      keyboardInputRef.current !== undefined &&
-      keyboardInputRef.current !== null
-    ) {
-      keyboardInputRef.current.value = "";
-    }
-  };
-
-  const isIncorrect = () => {
-    setWrongCount((count) => count - 1);
-  };
-
-  const extraLogic = (guess: number | string) => {
-    if (guess === "Skip") {
-      reset();
-      return true;
-    }
-    if (guess === "ans") {
-      setShowAnswer(true);
-      return true;
-    }
-  };
+  const {
+    rightCount,
+    wrongCount,
+    answer,
+    isModalOpen,
+    showAnswer,
+    showStepByStep,
+    toggleStepByStep,
+    ifCorrect,
+    isIncorrect,
+    extraLogic,
+    openModal,
+    closeModal,
+  } = useGameLogic();
 
   return (
     <div className="App">
