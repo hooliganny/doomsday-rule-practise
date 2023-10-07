@@ -1,11 +1,12 @@
 import React, { useRef } from "react";
 
 type AnswerProps = {
-  title: string;
+  title?: string;
   possibleAnswers: (string | number)[];
   answer: string | number;
   ifCorrect: () => void;
   ifIncorrect: () => void;
+  extraLogic?: (guess: number | string) => void;
 };
 
 const Answer = ({
@@ -14,12 +15,19 @@ const Answer = ({
   answer,
   ifCorrect,
   ifIncorrect,
+  extraLogic,
 }: AnswerProps) => {
   const keyboardInputRef = useRef<HTMLInputElement | null>(null);
 
-  const buttonPress = (day: string | number | undefined) => {
-    console.log(day, answer);
-    if (day == answer) {
+  const handleGuess = (guess: string | number | undefined) => {
+    if (guess === "" || !guess) {
+      return null;
+    }
+    if (extraLogic?.(guess)) {
+      return null;
+    }
+
+    if (guess == answer) {
       ifCorrect();
       if (keyboardInputRef.current) {
         keyboardInputRef.current.value = "";
@@ -31,13 +39,13 @@ const Answer = ({
 
   function handleKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
     if (event.key === "Enter") {
-      buttonPress(keyboardInputRef.current?.value);
+      handleGuess(keyboardInputRef.current?.value);
     }
   }
 
   return (
     <>
-      <h2>{title}</h2>
+      {title && <h2>{title}</h2>}
       <div className="button-wrapper">
         {possibleAnswers.map((day, index) => {
           return (
@@ -49,7 +57,7 @@ const Answer = ({
                     ? { background: "gray", color: "white" }
                     : undefined
                 }
-                onClick={() => buttonPress(day)}
+                onClick={() => handleGuess(day)}
               >
                 {day}
               </button>
