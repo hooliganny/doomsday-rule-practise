@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Modal from "./Modal";
 import "./App.css";
 import StepByStepGuess from "./StepByStepGuess";
@@ -120,18 +120,18 @@ function App() {
         <hr style={{ width: "100%" }} />
         {showAnswer && (
           <h2>
-            This will be removed later,
-            <br /> answer: {answer.getDay()}/{Days[answer.getDay()]}
+            answer: {answer.getDay()}/{Days[answer.getDay()]}
           </h2>
         )}
 
         {showStepByStep && <StepByStepGuess answer={answer} />}
         <Answer
-          answer={Days[answer.getDay()]}
+          answer={answer.getDay()}
           ifCorrect={ifCorrect}
           ifIncorrect={isIncorrect}
           possibleAnswers={Days.concat("Skip")}
           extraLogic={extraLogic}
+          supportsDays
         />
 
         <p className="correct">Number of guesses correct: {rightCount}</p>

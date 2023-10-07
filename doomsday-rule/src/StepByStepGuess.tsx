@@ -72,8 +72,6 @@ const StepByStepGuess = ({ answer }: { answer: Date }) => {
     if (step < steps.length) {
       setStep(step + 1);
       setSumSoFar((prevSum) => prevSum + steps[step].answer);
-    } else {
-      console.log("All steps completed");
     }
   }, [step]);
 
@@ -91,7 +89,8 @@ const StepByStepGuess = ({ answer }: { answer: Date }) => {
             answer={stepData.answer}
             possibleAnswers={stepData.possibleAnswers}
             ifCorrect={handleCorrectAnswer}
-            ifIncorrect={() => console.log("incorrect")}
+            ifIncorrect={() => void 0}
+            supportsDays={step === 0}
           />
         </Fragment>
       ))}

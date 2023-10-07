@@ -1,8 +1,10 @@
 import React, { useRef } from "react";
+import { Days } from "./App";
 
 type AnswerProps = {
   title?: string;
   possibleAnswers: (string | number)[];
+  supportsDays?: boolean;
   answer: string | number;
   ifCorrect: () => void;
   ifIncorrect: () => void;
@@ -12,6 +14,7 @@ type AnswerProps = {
 const Answer = ({
   title,
   possibleAnswers,
+  supportsDays,
   answer,
   ifCorrect,
   ifIncorrect,
@@ -27,7 +30,7 @@ const Answer = ({
       return null;
     }
 
-    if (guess == answer) {
+    if (guess == answer || (supportsDays && guess == Days[answer as number])) {
       ifCorrect();
       if (keyboardInputRef.current) {
         keyboardInputRef.current.value = "";
