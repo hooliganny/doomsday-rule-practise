@@ -1,12 +1,14 @@
 {
-  "name": "doomsday-rule",
+  "name": "doomsday-rule-practise",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
+  "homepage": "https://hooliganny.github.io/doomsday-rule-practise",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "react": "^18.2.0",
@@ -20,6 +22,7 @@
     "@vitejs/plugin-react": "^3.1.0",
     "eslint": "^8.34.0",
     "eslint-plugin-react": "^7.32.2",
+    "gh-pages": "^6.2.0",
     "typescript": "^4.9.3",
     "vite": "^4.1.0"
   }
